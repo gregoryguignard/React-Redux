@@ -12,7 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import UpdateProduct from './UpdateProduct';
 import InfoProduct from './InfoProduct';
 import { connect } from 'react-redux';
-import { fetchProducts , deleteProduct } from '../redux/actions';
+import { fetchProducts , deleteProduct, edit } from '../redux/actions';
 
 
 
@@ -24,9 +24,10 @@ class ListProduct extends React.Component {
 
     updateProduct = (clickedEdit) => {
         this.setState({
-            clickedEdit: clickedEdit
+            clickedEdit: clickedEdit,
         })
-        this.props.updateEdit();
+        console.log(this.props.edit)
+        this.props.dispatch(edit(true));
     }
 
     componentDidUpdate(prevProps) {
@@ -49,7 +50,6 @@ class ListProduct extends React.Component {
     render() {
 
         const data = this.props.data
-        const edit = this.props.edit
         return (
             <div className="list">
                 <Grid container spacing={40}>
@@ -72,7 +72,7 @@ class ListProduct extends React.Component {
                                             <DeleteIcon />
                                         </Fab>
                                     </div>
-                                    {edit && this.state.clickedEdit === dat.name ? <UpdateProduct {...dat} setValue={this.props.setValue} update={this.props.update} /> : <InfoProduct {...dat}/>
+                                    {this.props.edit && this.state.clickedEdit === dat.name ? <UpdateProduct {...dat} /> : <InfoProduct {...dat}/>
                                     }
                                 </List>
                             </Grid>
@@ -84,8 +84,10 @@ class ListProduct extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state)
     return {
-        data: state.products
+        data: state.products,
+        edit : state.edit
     };
 };
   

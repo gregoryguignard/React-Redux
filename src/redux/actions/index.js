@@ -1,4 +1,4 @@
-import { ADD_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT } from './types';
+import { ADD_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT, EDIT } from './types';
 import axios from 'axios';
 
 export const addProduct = (name, quantity, price) => {
@@ -43,7 +43,7 @@ export const deleteProduct = id => {
     };
 }
 
-export function deleteProductSuccess() {
+export const deleteProductSuccess = () => {
     return {
         type: DELETE_PRODUCT,
         payload: {
@@ -52,7 +52,7 @@ export function deleteProductSuccess() {
     }
 };
 
-export function fetchProducts() {
+export const fetchProducts = () =>  {
     return (dispatch) => {
         return axios.get('http://localhost:27017/api/getData')
             .then(response => {
@@ -97,3 +97,10 @@ export const updateProductSuccess = (data) => {
         }
     }
 };
+
+export const edit = (edit) => {
+    return {
+        type: EDIT,
+        edit: edit
+    }
+}

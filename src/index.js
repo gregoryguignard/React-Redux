@@ -15,7 +15,6 @@ const store = createStore(
   rootReducer,
   applyMiddleware(thunk)
 );
-
 store.dispatch(fetchProducts());
 
 

@@ -1,30 +1,44 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import '../styles/ListProduct.css'
 
 // ---- Material-Ui ----
 import TextField from '@material-ui/core/TextField'
 import ListItem from '@material-ui/core/ListItem'
 import Button from '@material-ui/core/Button'
-
+import { connect } from 'react-redux';
+import { updateProduct , edit } from '../redux/actions';
 
 import 'typeface-roboto';
 
-const styles = theme => ({
-    clearButton: {
-        marginLeft: 10
-    },
-    containerSize: {
-        height: 150,
-        fontSize: 12
-    },
-    paddingText: {
-        padding: 0,
-    }
-});
-
-
 class UpdateProduct extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            quantity: '',
+            price: '',
+        }
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    update(name, price, quantity) {
+        let idToUpdate = null;
+        this.props.data.forEach(element => {
+            if (element.name === name) {
+              idToUpdate = element._id;
+            }
+          });
+        this.props.dispatch(updateProduct(idToUpdate, name, quantity, price))
+        this.props.dispatch(edit(false))
+        this.setState({
+            quantity: '',
+            price: '',
+        });
+    }
 
     render() {
         return (
@@ -34,8 +48,9 @@ class UpdateProduct extends React.Component {
                         id="standard-number"
                         label="Quantity"
                         type="number"
-                        onChange={e => this.props.setValue(this.props.name, e.target.value, this.props.price)}
-                        value={this.props.quantity}
+                        name="quantity"
+                        onChange={this.handleChange}
+                        value={this.state.quantity}
                     />
                 </ListItem>
                 <ListItem>
@@ -43,11 +58,12 @@ class UpdateProduct extends React.Component {
                         id="standard-number"
                         label="Price"
                         type="number"
-                        onChange={e => this.props.setValue(this.props.name, e.target.value, this.props.price)}
-                        value={this.props.price}
+                        name="price"
+                        onChange={this.handleChange}
+                        value={this.state.price}
                     />
                 </ListItem>
-                <Button variant="outlined" color="primary" onClick={() => this.props.update(this.props.name, this.props.price, this.props.quantity)}>
+                <Button variant="outlined" color="primary" onClick={() => this.update(this.props.name, this.state.price, this.state.quantity)}>
                             Update product info
                     </Button>
             </div>
@@ -55,4 +71,12 @@ class UpdateProduct extends React.Component {
     }
 }
 
-export default withStyles(styles)(UpdateProduct);
+const mapStateToProps = state => {
+    return {
+        data: state.products,
+        edit: state.edit
+    };
+};
+
+export default connect(
+    mapStateToProps)(UpdateProduct);

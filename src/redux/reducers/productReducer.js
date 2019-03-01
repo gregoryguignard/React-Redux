@@ -7,11 +7,11 @@ export default function productReducer(state = [], action) {
                 ...state, action.payload
             ];
         case DELETE_PRODUCT:
-            return [...state,action.payload]
+            return [...state, action.payload]
         case FETCH_PRODUCT:
             return action.products
         case UPDATE_PRODUCT:
-            return[...state,action.payload]
+            return [...state, action.payload]
         default:
             return state;
     }

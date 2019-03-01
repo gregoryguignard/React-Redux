@@ -11,8 +11,6 @@ class App extends Component {
 
     state = {
         updateCom: false,
-        open: false,
-        edit: false,
     };
 
 
@@ -26,17 +24,14 @@ class App extends Component {
     //     });
     // };
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.data.length !== this.props.data.length) {
-            console.log('update')
-            this.props.dispatch(fetchProducts())
-            this.setState({
-                edit: false,
-                quantityUpdate: '',
-                priceUpdate: '',
-            })
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (prevProps.data.length !== this.props.data.length) {
+    //         console.log('update')
+    //         console.log()
+    //         this.props.dispatch(edit(false));
+    //         this.props.dispatch(fetchProducts())
+    //     }
+    // }
 
     updateProduct = (productToUpdate, newQuantity, newPrice) => {
         let idToUpdate = null;
@@ -100,7 +95,8 @@ class App extends Component {
 }
 const mapStateToProps = state => {
     return {
-        data: state.products
+        data: state.products.products,
+        edit: state.products.edit
     };
 };
 export default connect(

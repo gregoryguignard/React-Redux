@@ -144,7 +144,8 @@ class NewProduct extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        data: state.products
+        data: state.products,
+        edit: state.edit
     };
 };
 export default connect(
