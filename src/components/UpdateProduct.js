@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import ListItem from '@material-ui/core/ListItem'
 import Button from '@material-ui/core/Button'
 import { connect } from 'react-redux';
-import { updateProduct , edit } from '../redux/actions';
+import { updateProduct , edit, errorMessage } from '../redux/actions';
 
 import 'typeface-roboto';
 
@@ -31,9 +31,14 @@ class UpdateProduct extends React.Component {
             if (element.name === name) {
               idToUpdate = element._id;
             }
-          });
+        });
+        if (!quantity || !price) {
+            this.props.dispatch(errorMessage('You need to complete both fields to update the product.', true))
+            return;
+        }
         this.props.dispatch(updateProduct(idToUpdate, name, quantity, price))
         this.props.dispatch(edit(false))
+        console.log(this.props.status)
         this.setState({
             quantity: '',
             price: '',
@@ -74,7 +79,7 @@ class UpdateProduct extends React.Component {
 const mapStateToProps = state => {
     return {
         data: state.products,
-        edit: state.edit
+        status: state.edit
     };
 };
 

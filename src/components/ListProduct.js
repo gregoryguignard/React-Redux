@@ -26,8 +26,8 @@ class ListProduct extends React.Component {
         this.setState({
             clickedEdit: clickedEdit,
         })
-        console.log(this.props.edit)
         this.props.dispatch(edit(true));
+
     }
 
     componentDidUpdate(prevProps) {
@@ -72,7 +72,7 @@ class ListProduct extends React.Component {
                                             <DeleteIcon />
                                         </Fab>
                                     </div>
-                                    {this.props.edit && this.state.clickedEdit === dat.name ? <UpdateProduct {...dat} /> : <InfoProduct {...dat}/>
+                                    {this.props.status.edit && this.state.clickedEdit === dat.name ? <UpdateProduct {...dat} /> : <InfoProduct {...dat}/>
                                     }
                                 </List>
                             </Grid>
@@ -84,10 +84,9 @@ class ListProduct extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         data: state.products,
-        edit : state.edit
+        status : state.edit
     };
 };
   

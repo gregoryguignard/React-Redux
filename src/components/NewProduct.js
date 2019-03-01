@@ -4,20 +4,11 @@ import '../styles/NewProduct.css'
 // ---- Material-Ui ----
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-// import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-// import { Input } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography'
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
-// ---- React-Bootstrap ---- 
-// import Button from 'react-bootstrap/Button';
-// import FormControl from 'react-bootstrap/FormControl';
-// import InputGroup from 'react-bootstrap/InputGroup';
 import 'typeface-roboto';
-import { addProduct } from '../redux/actions';
+import { addProduct, errorMessage } from '../redux/actions';
 
 import { connect } from 'react-redux';
 
@@ -30,7 +21,6 @@ class NewProduct extends React.Component {
             name: '',
             quantity: '',
             price: '',
-            open: false,
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -39,32 +29,7 @@ class NewProduct extends React.Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleClose = () => {
-        this.setState({
-            open: false,
-            name: '',
-            price: '',
-            quantity: ''
-        });
-    };
-
-    addNewProduct(name, price, quantity) {
-        let exit = false;
-        if (this.props.data.length > 0) {
-            this.props.data.map(element => {
-                if (element.name.toLowerCase() === name.toLowerCase()) {
-                    exit = true;
-                }
-            })
-            if (!name || !price || !quantity) {
-                exit = true;
-            }
-            if (exit) {
-                this.setState({ open: true })
-                return;
-            }
-        }
-        this.props.addProduct(name, price, quantity)
+    clearFields() {
         this.setState({
             name: '',
             quantity: '',
@@ -72,10 +37,37 @@ class NewProduct extends React.Component {
         });
     }
 
-    render() {
+    addNewProduct(name, price, quantity) {
+        let exit = false;
+        if (this.props.data.length > 0) {
+            this.props.data.map(element => {
+                if (element.name.toLowerCase() === name.toLowerCase()) {
+                    exit = true;
+                    return;
+                }
+            })
+            if (!name || !price || !quantity) {
+                exit = true;
+            }
+            if (exit) {
+                let message = '';
+                if (!this.state.name || !this.state.quantity || !this.state.price) {
+                    message ='You need to complete all the field in order to add a product'
+                } else {
+                    message = `${this.state.name} is already listed as a product`
+                }
+                this.clearFields()
+                this.props.errorMessage(message, true)
+                return;
+            }
 
-        const open = this.state.open;
-        const message = !this.state.name || !this.state.quantity || !this.state.price ? 'You need to complete all the field in order to add a product' : `${this.state.name} is already listed as a product`
+        }
+        this.props.addProduct(name, price, quantity)
+        this.clearFields()
+
+    }
+
+    render() {
 
         return (
             <div className="newProduct">
@@ -117,26 +109,6 @@ class NewProduct extends React.Component {
                     </Button>
                     </FormControl>
                 </div>
-
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={open}
-                    onClose={this.handleClose}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{message}</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="secondary"
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
             </div>
         );
     }
@@ -145,8 +117,8 @@ class NewProduct extends React.Component {
 const mapStateToProps = state => {
     return {
         data: state.products,
-        edit: state.edit
+        status: state.edit
     };
 };
 export default connect(
-    mapStateToProps, { addProduct })(NewProduct);
+    mapStateToProps, { addProduct,errorMessage })(NewProduct);

@@ -1,4 +1,4 @@
-import { ADD_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT, EDIT } from './types';
+import { ADD_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT, EDIT,ERROR_MESSAGE } from './types';
 import axios from 'axios';
 
 export const addProduct = (name, quantity, price) => {
@@ -102,5 +102,16 @@ export const edit = (edit) => {
     return {
         type: EDIT,
         edit: edit
+    }
+}
+
+export const errorMessage = (message,open) => {
+    return {
+        type: ERROR_MESSAGE,
+        payload : {
+            message: message,
+            openErrorMessage:open
+        }
+
     }
 }
